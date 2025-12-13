@@ -13,7 +13,7 @@ const isbnTemplates = [
 function displayBookImages() {
     const isbnInput = document.getElementById('isbnInput').value.trim();
     const resultsDiv = document.getElementById('results');
-    
+    const cleanedIsbn = isbnInput.replace(/[-\s]/g, '');
     // تنظيف النتائج السابقة
     resultsDiv.innerHTML = ''; 
 
@@ -59,3 +59,4 @@ function displayBookImages() {
     });
 
 }
+

@@ -1,7 +1,9 @@
 // **روابط GitHub Pages الصحيحة**
 const isbnTemplates = [
     "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.jpg",
-    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.png"
+    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.png",
+    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.jpeg",
+    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.bmp"
 ];
 
 function displayBookImages() {
@@ -52,3 +54,4 @@ function displayBookImages() {
         resultsDiv.appendChild(imageWrapper);
     });
 }
+

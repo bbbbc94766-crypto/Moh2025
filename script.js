@@ -1,11 +1,14 @@
-// **روابط GitHub Pages الصحيحة**
-const isbnTemplates = [
-    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.jpg",
-    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.png",
-    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.jpeg",
-    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.bmp"
-];
+// قائمة الامتدادات الشائعة التي سيحاول الكود تحميلها بالترتيب
+const IMAGE_EXTENSIONS = ['.jpg', '.png', '.jpeg', '.webp'];
 
+// الرابط الأساسي لمجلد الصور الخاص بمشروعك على GitHub Pages
+// **يجب تغيير هذا المتغير ليعمل الموقع بشكل صحيح**
+const BASE_URL = "https://bbbbc94766-crypto.github.io/Moh2025/images/"; 
+
+/**
+ * وظيفة رئيسية: تبدأ عملية البحث عن صور الكتب وعرضها.
+ * يتم استدعاؤها بالنقر على زر "عرض الصور" في ملف index.html.
+ */
 function displayBookImages() {
     const isbnInput = document.getElementById('isbnInput').value.trim();
     const resultsDiv = document.getElementById('results');
@@ -21,37 +24,65 @@ function displayBookImages() {
     // تجهيز رقم الـ ISBN (إزالة الفراغات والواصلات إن وجدت)
     const cleanedIsbn = isbnInput.replace(/[-\s]/g, '');
 
-    // إنشاء وعرض كل صورة بناءً على القوالب
-    isbnTemplates.forEach((template, index) => {
-        // 1. بناء الرابط
-        const imageUrl = template.replace('!!isbn!!', cleanedIsbn);
+    // إنشاء حاوية واحدة لنتائج البحث
+    const imageWrapper = document.createElement('div');
+    imageWrapper.className = 'book-image';
+    resultsDiv.appendChild(imageWrapper);
 
-        // 2. إنشاء عناصر HTML
-        const imageWrapper = document.createElement('div');
-        imageWrapper.className = 'book-image';
-
-        const imageElement = document.createElement('img');
-        imageElement.src = imageUrl;
-        imageElement.alt = `صورة كتاب برقم ISBN: ${cleanedIsbn} (المصدر ${index + 1})`;
-        
-        // 3. إضافة معالج للأخطاء
-        imageElement.onerror = function() {
-            // يتم استخدام هذا للتعامل مع الصور غير الموجودة
-            imageWrapper.innerHTML = `
-                <p>المصدر ${index + 1} (فشل التحميل أو الصورة غير موجودة)</p>
-                <small>رابط البحث: ${imageUrl}</small>
-            `;
-            imageWrapper.style.border = '1px dashed red';
-        };
-        
-        // 4. عرض الرابط بجانب الصورة (للتوثيق)
-        const sourceInfo = document.createElement('p');
-        sourceInfo.innerHTML = `المصدر ${index + 1} <br> (<a href="${imageUrl}" target="_blank">الرابط المباشر</a>)`;
-
-        // 5. تجميع العناصر وعرضها
-        imageWrapper.appendChild(imageElement);
-        imageWrapper.appendChild(sourceInfo);
-        resultsDiv.appendChild(imageWrapper);
-    });
+    // بدء محاولة البحث عن الصورة باستخدام أول امتداد (المؤشر 0)
+    tryLoadImage(cleanedIsbn, 0, imageWrapper);
 }
 
+/**
+ * دالة متكررة (Recursive) تحاول تحميل صورة بالـ ISBN المعطى باستخدام الامتدادات المتاحة.
+ * * @param {string} isbn - رقم ISBN النظيف.
+ * @param {number} extIndex - مؤشر الامتداد الحالي في مصفوفة IMAGE_EXTENSIONS.
+ * @param {HTMLElement} wrapper - الحاوية لعرض الصورة أو رسالة الخطأ.
+ */
+function tryLoadImage(isbn, extIndex, wrapper) {
+    // 1. التحقق: هل وصلنا إلى نهاية قائمة الامتدادات؟
+    if (extIndex >= IMAGE_EXTENSIONS.length) {
+        // إذا وصلنا للنهاية ولم نجد أي صورة:
+        wrapper.innerHTML = `<p>لم يتم العثور على صورة بهذا الـ ISBN (${isbn}) بأي من الامتدادات المدعومة.</p>`;
+        wrapper.style.border = '1px dashed red';
+        return;
+    }
+
+    const extension = IMAGE_EXTENSIONS[extIndex];
+    // 2. بناء الرابط للمحاولة الحالية
+    const imageUrl = `${BASE_URL}${isbn}${extension}`; 
+
+    const imageElement = new Image(); // استخدام كائن الصورة
+    
+    // 3. تعريف دالة عند النجاح (onload)
+    imageElement.onload = function() {
+        // إذا تم تحميل الصورة بنجاح:
+        wrapper.innerHTML = ''; // تنظيف رسائل الانتظار
+        imageElement.alt = `غلاف الكتاب برقم ISBN ${isbn} (${extension})`;
+        
+        const sourceInfo = document.createElement('p');
+        sourceInfo.innerHTML = `تم العثور على الصورة (${extension}) <br> (<a href="${imageUrl}" target="_blank">الرابط المباشر</a>)`;
+
+        wrapper.appendChild(imageElement);
+        wrapper.appendChild(sourceInfo);
+        wrapper.style.border = '1px solid green';
+        
+        // نتوقف عن المحاولة
+    };
+
+    // 4. تعريف دالة عند الفشل (onerror)
+    imageElement.onerror = function() {
+        // إذا فشل تحميل الصورة، ننتقل إلى محاولة الامتداد التالي
+        tryLoadImage(isbn, extIndex + 1, wrapper); 
+    };
+
+    // إضافة نص انتظار مؤقت قبل بدء التحميل
+    if (extIndex === 0) {
+        wrapper.innerHTML = `<p>جاري البحث عن الصورة... (محاولة: ${extension})</p>`;
+    } else {
+        wrapper.innerHTML = `<p>جاري البحث عن الصورة... (جاري محاولة: ${extension})</p>`;
+    }
+    
+    // 5. بدء محاولة التحميل بتعيين مصدر الصورة
+    imageElement.src = imageUrl;
+}

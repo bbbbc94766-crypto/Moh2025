@@ -1,19 +1,13 @@
-// قائمة بقوالب الروابط التي تريد استخدامها.
-// !!isbn!! سيتم استبدالها برقم ISBN المدخل.
+// **روابط GitHub Pages الصحيحة**
 const isbnTemplates = [
-    "http://images-eu.amazon.com/images/P/!!isbn!!.08.MZZZZZZZ.jpg",
-    "https://pictures.abebooks.com/isbn/!!isbn!!-fr-300.jpg",
-    "https://images-eu.ssl-images-amazon.com/images/P/!!isbn!!.08.MZZZZZZZ.jpg",
-    "https://distrimage.pmbservices.fr/bnf/!!isbn!!",
-    "https://github.com/bbbbc94766-crypto/Moh2025/blob/main/images/!!isbn!!.jpg"
-    "https://github.com/bbbbc94766-crypto/Moh2025/blob/main/images/!!isbn!!.png"
-    // يمكنك إضافة المزيد من الروابط هنا
+    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.jpg",
+    "https://bbbbc94766-crypto.github.io/Moh2025/images/!!isbn!!.png"
 ];
 
 function displayBookImages() {
     const isbnInput = document.getElementById('isbnInput').value.trim();
     const resultsDiv = document.getElementById('results');
-    const cleanedIsbn = isbnInput.replace(/[-\s]/g, '');
+    
     // تنظيف النتائج السابقة
     resultsDiv.innerHTML = ''; 
 
@@ -38,12 +32,12 @@ function displayBookImages() {
         imageElement.src = imageUrl;
         imageElement.alt = `صورة كتاب برقم ISBN: ${cleanedIsbn} (المصدر ${index + 1})`;
         
-        // 3. إضافة معالج للأخطاء (مهم جداً!)
-        // إذا فشل تحميل الصورة (لأن الرابط غير صالح أو الصورة غير موجودة في هذا المصدر)، فسنعرض رسالة بدلاً من الصورة المكسورة.
+        // 3. إضافة معالج للأخطاء
         imageElement.onerror = function() {
+            // يتم استخدام هذا للتعامل مع الصور غير الموجودة
             imageWrapper.innerHTML = `
-                <p>المصدر ${index + 1} (فشل التحميل)</p>
-                <small>الرابط: ${imageUrl}</small>
+                <p>المصدر ${index + 1} (فشل التحميل أو الصورة غير موجودة)</p>
+                <small>رابط البحث: ${imageUrl}</small>
             `;
             imageWrapper.style.border = '1px dashed red';
         };
@@ -57,6 +51,4 @@ function displayBookImages() {
         imageWrapper.appendChild(sourceInfo);
         resultsDiv.appendChild(imageWrapper);
     });
-
 }
-

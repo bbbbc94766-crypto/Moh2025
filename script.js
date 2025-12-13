@@ -5,6 +5,8 @@ const isbnTemplates = [
     "https://pictures.abebooks.com/isbn/!!isbn!!-fr-300.jpg",
     "https://images-eu.ssl-images-amazon.com/images/P/!!isbn!!.08.MZZZZZZZ.jpg",
     "https://distrimage.pmbservices.fr/bnf/!!isbn!!",
+    "https://github.com/bbbbc94766-crypto/Moh2025/blob/main/images/!!isbn!!.jpg"
+    "https://github.com/bbbbc94766-crypto/Moh2025/blob/main/images/!!isbn!!.png"
     // يمكنك إضافة المزيد من الروابط هنا
 ];
 
@@ -55,4 +57,5 @@ function displayBookImages() {
         imageWrapper.appendChild(sourceInfo);
         resultsDiv.appendChild(imageWrapper);
     });
+
 }

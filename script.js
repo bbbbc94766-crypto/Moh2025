@@ -1,6 +1,5 @@
 // قائمة الامتدادات الشائعة التي سيحاول الكود تحميلها بالترتيب
-const IMAGE_EXTENSIONS = ['.jpg', '.png', '.jpeg', '.webp'];
-
+const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.JPG', '.JPEG'];
 // الرابط الأساسي لمجلد الصور الخاص بمشروعك على GitHub Pages
 // **يجب تغيير هذا المتغير ليعمل الموقع بشكل صحيح**
 const BASE_URL = "https://bbbbc94766-crypto.github.io/Moh2025/images/"; 
@@ -86,3 +85,4 @@ function tryLoadImage(isbn, extIndex, wrapper) {
     // 5. بدء محاولة التحميل بتعيين مصدر الصورة
     imageElement.src = imageUrl;
 }
+
